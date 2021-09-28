@@ -5,3 +5,10 @@ opencv-python
 git+https://github.com/liruilong940607/aniposelib
 git+https://github.com/liruilong940607/smplx
 ffmpeg-python
+
+# http_proxy=http://127.0.0.1:2340/
+# no_proxy=localhost,127.0.0.0/8,::1
+# all_proxy=socks5://127.0.0.1:1082
+
+# vi 
+# export all_proxy=socks5://127.0.0.1:1082

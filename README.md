@@ -11,11 +11,15 @@ python setup.py install
 ```
 You also need to make sure [ffmpeg](https://ffmpeg.org/download.html) is installed on your machine, if you would like to visualize the annotations using this api.
 
+```
+sudo apt-get install FFmpeg
+```
+
 ## How to use
 We provide demo code for loading and visualizing AIST++ annotations. 
 Note [AIST++ annotations and
 videos](https://google.github.io/aistplusplus_dataset/download.html),
-as well as the [SMPL model](https://smpl.is.tue.mpg.de/en) (for SMPL visualization only) are required to run the demo code.
+as well as the [SMPL model](https://smpl.is.tue.mpg.de/en) (for SMPL visualization only) are required to run the demo code. I have downloaded the SMPL python package, which you can run `python smpl/extract_SMPL_model.py --model_path smpl/models` to extract SMPL model from the downloaded basicModel.
 
 The directory structure of the data is expected to be:
 ```
@@ -40,10 +44,10 @@ The command below will plot 2D keypoints onto the raw video and save it to the
 directory `./visualization/`.
 ``` bash
 python demos/run_vis.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --video_dir <VIDEO_DIR> \
+  --anno_dir /home/huyueyue/Dataset/aist_plusplus_final \
+  --video_dir /home/huyueyue/Dataset/videos \
   --save_dir ./visualization/ \
-  --video_name gWA_sFM_c01_d27_mWA2_ch21 \
+  --video_name gBR_sBM_c01_d04_mBR1_ch04 \
   --mode 2D
 ```
 
@@ -52,10 +56,10 @@ The command below will project 3D keypoints onto the raw video using camera para
 directory `./visualization/`.
 ``` bash
 python demos/run_vis.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --video_dir <VIDEO_DIR> \
+  --anno_dir /home/huyueyue/Dataset/aist_plusplus_final \
+  --video_dir /home/huyueyue/Dataset/videos \
   --save_dir ./visualization/ \
-  --video_name gWA_sFM_c01_d27_mWA2_ch21 \
+  --video_name gBR_sBM_c01_d04_mBR1_ch04 \
   --mode 3D
 ```
 
@@ -65,13 +69,7 @@ annotations (joint rotations and root trajectories), then project them onto the
 raw video and plot. The result will be saved into the directory
 `./visualization/`.
 ``` bash
-python demos/run_vis.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --video_dir <VIDEO_DIR> \ 
-  --smpl_dir <SMPL_DIR> \
-  --save_dir ./visualization/ \ 
-  --video_name gWA_sFM_c01_d27_mWA2_ch21 \ 
-  --mode SMPL
+python demos/run_vis.py --anno_dir /home/huyueyue/Dataset/aist_plusplus_final --video_dir /home/huyueyue/Dataset/videos --smpl_dir /home/huyueyue/Dataset/SMPL --save_dir ./visualization/ --video_name gBR_sBM_c01_d04_mBR1_ch04 --mode SMPL
 ```
 
 #### Visualize the SMPL Mesh
@@ -81,20 +79,16 @@ annotations (joint rotations and root trajectories), and visualize in 3D.
 # install some additional libraries for 3D mesh visualization
 pip install vedo trimesh
 
-python demos/run_vis.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --smpl_dir <SMPL_DIR> \
-  --video_name gWA_sFM_c01_d27_mWA2_ch21 \ 
-  --mode SMPLMesh
+python demos/run_vis.py --anno_dir /home/huyueyue/Dataset/aist_plusplus_final --smpl_dir /home/huyueyue/Dataset/SMPL --video_name gBR_sBM_c01_d04_mBR1_ch04 --mode SMPLMesh
 ```
 
 #### Extract SMPL motion features
 The command below will calculate and print two types of features for a motion sequence in SMPL format. We take reference from [fairmotion](https://github.com/facebookresearch/fairmotion/tree/master/fairmotion/tasks/clustering) to calculate the features.
 ``` bash
 python demos/extract_motion_feats.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --smpl_dir <SMPL_DIR> \
-  --video_name gWA_sFM_c01_d27_mWA2_ch21
+  --anno_dir /home/huyueyue/Dataset/aist_plusplus_final \
+  --smpl_dir /home/huyueyue/Dataset/SMPL \
+  --video_name gBR_sBM_c01_d04_mBR1_ch04
 ```
 
 #### Multi-view 3D keypoints and motion reconstruction
@@ -122,20 +116,20 @@ version of AIST++, with your own keypoint detector or human model definition.**
 ``` bash
 python processing/run_preprocessing.py \
   --keypoints_dir <KEYPOINTS_DIR> \
-  --save_dir <ANNOTATIONS_DIR>/keypoints2d/
+  --save_dir /home/huyueyue/Dataset/aist_plusplus_final/keypoints2d/
 ```
 
 **Step 2.** Then you can estimate the camera parameters using your 2D keypoints. This step
 is optional as you can still use our camera parameter estimates which are
-quite accurate. At this step, you will need the `<ANNOTATIONS_DIR>/cameras/mapping.txt` file which stores the mapping from videos to different environment settings.
+quite accurate. At this step, you will need the `/home/huyueyue/Dataset/aist_plusplus_final/cameras/mapping.txt` file which stores the mapping from videos to different environment settings.
 ``` bash
 # install some additional libraries
 pip install -r processing/requirements.txt
 
 # If you would like to estimate your own camera parameters:
 python processing/run_estimate_camera.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --save_dir <ANNOTATIONS_DIR>/cameras/
+  --anno_dir /home/huyueyue/Dataset/aist_plusplus_final \
+  --save_dir /home/huyueyue/Dataset/aist_plusplus_final/cameras/
 # Or you can skip this step by just using our camera parameter estimates.
 ```
 
@@ -143,8 +137,8 @@ python processing/run_estimate_camera.py \
 and camera parameters. You can just run:
 ``` bash
 python processing/run_estimate_keypoints.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --save_dir <ANNOTATIONS_DIR>/keypoints3d/
+  --anno_dir /home/huyueyue/Dataset/aist_plusplus_final \
+  --save_dir /home/huyueyue/Dataset/aist_plusplus_final/keypoints3d/
 ```
 
 **Step 4.** Finally we can estimate SMPL-format human motion data by fitting
@@ -153,9 +147,9 @@ as [STAR](https://star.is.tue.mpg.de/), you will need to do some modifications i
 `run_estimate_smpl.py`. The following command runs SMPL fitting.
 ``` bash
 python processing/run_estimate_smpl.py \
-  --anno_dir <ANNOTATIONS_DIR> \
-  --smpl_dir <SMPL_DIR> \
-  --save_dir <ANNOTATIONS_DIR>/motions/
+  --anno_dir /home/huyueyue/Dataset/aist_plusplus_final \
+  --smpl_dir /home/huyueyue/Dataset/SMPL \
+  --save_dir /home/huyueyue/Dataset/aist_plusplus_final/motions/
 ```
 Note that this step will take several days to process the entire dataset if your machine has only one GPU.
 In practise, we run this step on a cluster, but are only able to provide the single-threaded version.
